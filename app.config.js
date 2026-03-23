@@ -14,7 +14,7 @@ export default {
     assetBundlePatterns: ["**/*"],
     ios: {
       supportsTablet: true,
-      bundleIdentifier: "com.yourcompany.pickafilm"
+      bundleIdentifier: "com.kynar.pickafilm"
     },
     android: {
       // adaptiveIcon: {                    // ← comment out or remove

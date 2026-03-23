@@ -25,7 +25,7 @@ export default function MatchScreen({ route, navigation }) {
       <Text style={styles.congrats}>🎉 MATCH! 🎉</Text>
       <Text style={styles.text}>Everyone liked:</Text>
       {movie && movie.poster_path && (
-        <Image source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }} style={styles.poster} />
+        <Image source={{ uri: getPosterUrl(movie.poster_path) }} style={styles.poster} />
       )}
       <Text style={styles.title}>{movie?.title}</Text>
       <Text style={styles.text}>Go watch with your friends!</Text>

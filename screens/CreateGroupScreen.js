@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 
+// Generates a random 6-character uppercase code like "A3XK91"
+function generateInviteCode() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
 export default function CreateGroupScreen({ navigation }) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,10 +24,12 @@ export default function CreateGroupScreen({ navigation }) {
       return;
     }
 
-    // Insert group
+    const inviteCode = generateInviteCode();
+
+    // Insert group with invite code
     const { data: group, error: groupError } = await supabase
       .from('groups')
-      .insert({ name: name.trim(), created_by: user.id })
+      .insert({ name: name.trim(), created_by: user.id, invite_code: inviteCode })
       .select()
       .single();
 
@@ -40,7 +47,12 @@ export default function CreateGroupScreen({ navigation }) {
     if (memberError) {
       Alert.alert('Error', memberError.message);
     } else {
-      navigation.replace('AddMovies', { groupId: group.id });
+      // Show the invite code before moving on
+      Alert.alert(
+        '🎉 Group Created!',
+        `Your invite code is:\n\n${inviteCode}\n\nShare this with friends so they can join.`,
+        [{ text: 'Add Movies', onPress: () => navigation.replace('AddMovies', { groupId: group.id }) }]
+      );
     }
     setLoading(false);
   }
@@ -54,7 +66,7 @@ export default function CreateGroupScreen({ navigation }) {
         onChangeText={setName}
         placeholder="e.g., Friday Movie Night"
       />
-      <Button title={loading ? "Creating..." : "Create Group"} onPress={handleCreate} disabled={loading} />
+      <Button title={loading ? 'Creating...' : 'Create Group'} onPress={handleCreate} disabled={loading} />
     </View>
   );
 }
