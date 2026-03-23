@@ -28,7 +28,8 @@ jobs:
       - name: Build Android APK
         run: |
           npx expo prebuild
-          npx react-native build-android --mode=release
+          cd android
+          ./gradlew assembleRelease
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -38,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: PickaFilm-APK
-          path: android/app/build/outputs/apk/release/*.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
