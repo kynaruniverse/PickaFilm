@@ -26,19 +26,19 @@ jobs:
         run: npm install
 
       - name: Build web app
-        run: npx expo export:web --output-dir dist
+        run: npx expo export:web
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-          
-      - name: List dist directory
-        run: ls -la dist/
+
+      - name: List build output
+        run: ls -la web-build/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist   # Expo export:web outputs to 'dist'
+          publish_dir: ./web-build
           publish_branch: gh-pages
           force_orphan: true
