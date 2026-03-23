@@ -4,27 +4,27 @@ export default {
     slug: "pickafilm",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    // icon: "./assets/icon.png",          // ← comment out or remove
     userInterfaceStyle: "light",
-    splash: {
-      image: "./assets/splash.png",
-      resizeMode: "contain",
-      backgroundColor: "#ffffff"
-    },
+    // splash: {                            // ← comment out or remove
+    //   image: "./assets/splash.png",
+    //   resizeMode: "contain",
+    //   backgroundColor: "#ffffff"
+    // },
     assetBundlePatterns: ["**/*"],
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.yourcompany.pickafilm"
     },
     android: {
-      adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#ffffff"
-      },
+      // adaptiveIcon: {                    // ← comment out or remove
+      //   foregroundImage: "./assets/adaptive-icon.png",
+      //   backgroundColor: "#ffffff"
+      // },
       package: "com.yourcompany.pickafilm"
     },
     web: {
-      favicon: "./assets/favicon.png"
+      // favicon: "./assets/favicon.png" // you can also comment this out if you don't have a favicon
     },
     extra: {
       supabaseUrl: process.env.SUPABASE_URL,
