@@ -2,12 +2,15 @@
   "name": "pickafilm",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
+  "homepage": "https://kynaruniverse.github.io/PickaFilm",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build:web": "expo build:web"
+    "build:web": "expo build:web",
+    "predeploy": "expo build:web",
+    "deploy": "gh-pages -d web-build"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",

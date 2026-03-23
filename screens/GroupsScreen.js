@@ -41,6 +41,7 @@ export default function GroupsScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Button title="+ New Group" onPress={createGroup} />
+      <Button title="Credits" onPress={() => navigation.navigate('Credits')} />
       <Button title="Join with Code" onPress={joinGroup} />
       <FlatList
         data={groups}

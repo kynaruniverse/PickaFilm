@@ -1,0 +1,41 @@
+name: Deploy Web to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:    # allows manual trigger from GitHub UI
+
+permissions:
+  contents: write        # needed for gh-pages deployment
+  pages: write           # if using pages deploy action
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build web app
+        run: npx expo build:web
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./web-build
+          publish_branch: gh-pages   # the branch that GitHub Pages will serve
+          force_orphan: true         # optional: keep clean history

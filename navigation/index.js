@@ -7,6 +7,8 @@ import CreateGroupScreen from '../screens/CreateGroupScreen';
 import AddMoviesScreen from '../screens/AddMoviesScreen';
 import SwipeScreen from '../screens/SwipeScreen';
 import MatchScreen from '../screens/MatchScreen';
+import CreditsScreen from '../screens/CreditsScreen';
+
 
 const Stack = createStackNavigator();
 
@@ -20,6 +22,7 @@ export default function Navigation() {
         <Stack.Screen name="AddMovies" component={AddMoviesScreen} />
         <Stack.Screen name="Swipe" component={SwipeScreen} />
         <Stack.Screen name="Match" component={MatchScreen} />
+        <Stack.Screen name="Credits" component={CreditsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
