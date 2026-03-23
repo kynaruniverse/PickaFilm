@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, StyleSheet, Image, ActivityIndicator, Alert } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import { supabase } from '../lib/supabase';
@@ -6,12 +6,18 @@ import { supabase } from '../lib/supabase';
 export default function SwipeScreen({ route, navigation }) {
   const { groupId } = route.params;
   const [group, setGroup] = useState(null);
+  const groupRef = useRef(group); // ← add this
   const [currentMovie, setCurrentMovie] = useState(null);
   const [hasSwiped, setHasSwiped] = useState(false);
   const [swipedCount, setSwipedCount] = useState(0);
   const [totalMembers, setTotalMembers] = useState(0);
   const [loading, setLoading] = useState(true);
-
+  
+  // Keep groupRef in sync with the latest group state
+  useEffect(() => {
+    groupRef.current = group;
+  }, [group]);
+  
   useEffect(() => {
     loadGroup();
     // Subscribe to group changes
@@ -22,13 +28,13 @@ export default function SwipeScreen({ route, navigation }) {
         setGroup(updatedGroup);
         if (updatedGroup.status === 'matched') {
           navigation.replace('Match', { groupId, movie: currentMovie });
-        } else if (updatedGroup.current_movie_id !== group?.current_movie_id) {
-          // Load new movie
+        } else if (updatedGroup.current_movie_id !== groupRef.current?.current_movie_id) {
+          // Load new movie using the latest group reference
           loadCurrentMovie(updatedGroup.current_movie_id);
         }
       })
       .subscribe();
-
+    
     // Subscribe to swipes to know who has swiped (without votes)
     const swipesSubscription = supabase
       .channel(`swipes-${groupId}`)
@@ -37,13 +43,13 @@ export default function SwipeScreen({ route, navigation }) {
         fetchSwipedCount();
       })
       .subscribe();
-
+    
     return () => {
       supabase.removeChannel(groupSubscription);
       supabase.removeChannel(swipesSubscription);
     };
-  }, []);
-
+  }, []); // Empty dependency array – runs once
+  
   async function loadGroup() {
     const { data, error } = await supabase
       .from('groups')
@@ -64,7 +70,7 @@ export default function SwipeScreen({ route, navigation }) {
       navigation.goBack();
     }
   }
-
+  
   async function loadCurrentMovie(movieId) {
     const { data, error } = await supabase
       .from('movies')
@@ -89,7 +95,7 @@ export default function SwipeScreen({ route, navigation }) {
     fetchSwipedCount();
     setLoading(false);
   }
-
+  
   async function fetchSwipedCount() {
     if (!group || !currentMovie) return;
     const { count, error } = await supabase
@@ -99,7 +105,7 @@ export default function SwipeScreen({ route, navigation }) {
       .eq('movie_id', currentMovie.id);
     if (!error) setSwipedCount(count);
   }
-
+  
   async function handleSwipe(direction) {
     if (hasSwiped) return;
     const vote = direction === 'right'; // right = like, left = dislike
@@ -119,10 +125,10 @@ export default function SwipeScreen({ route, navigation }) {
       // The database trigger will handle advancing or matching
     }
   }
-
+  
   if (loading) return <View style={styles.container}><ActivityIndicator size="large" /></View>;
   if (!currentMovie) return <View style={styles.container}><Text>No movies to swipe</Text></View>;
-
+  
   return (
     <View style={styles.container}>
       <Text style={styles.groupName}>{group.name}</Text>

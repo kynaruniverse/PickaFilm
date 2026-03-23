@@ -32,12 +32,14 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
           
       - name: Build Android APK
-        run: npx expo build:android --local
+        run: |
+          npx expo prebuild
+          npx react-native build-android --mode=release
         
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v1
         with:
-          files: *.apk
+          files: android/app/build/outputs/apk/release/*.apk
           tag_name: build-${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
