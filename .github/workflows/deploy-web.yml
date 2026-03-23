@@ -3,11 +3,11 @@ name: Deploy Web to GitHub Pages
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:    # allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 permissions:
-  contents: write        # needed for gh-pages deployment
-  pages: write           # if using pages deploy action
+  contents: write
+  pages: write
   id-token: write
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
         run: npm install
 
       - name: Build web app
-        run: npx expo build:web
+        run: npx expo export:web
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -36,6 +36,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./web-build
-          publish_branch: gh-pages   # the branch that GitHub Pages will serve
-          force_orphan: true         # optional: keep clean history
+          publish_dir: ./dist   # Expo export:web outputs to 'dist'
+          publish_branch: gh-pages
+          force_orphan: true
