@@ -29,7 +29,10 @@ export default {
     extra: {
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
-      tmdbApiKey: process.env.TMDB_API_KEY
+      tmdbApiKey: process.env.TMDB_API_KEY,
+      eas: {
+        projectId: "4b618378-892b-4146-8600-32d6e37f713c"
+      }
     }
   }
 };
